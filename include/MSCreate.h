@@ -62,7 +62,7 @@ namespace ulastai
   private:
     const int nBaselines;
   public:
-    RawDataSource(int n);
+    RawDataSource(int nb);
   public:
     int numOfBaselines()const;
     bool fetchOne();
