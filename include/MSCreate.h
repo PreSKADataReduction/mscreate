@@ -105,7 +105,7 @@ namespace ulastai
     // If flagColumn is given and nFlagBits>0, an integer flag column is
     // created and column FLAG is mapped to it.
     MSCreate (const std::string& msName,
-	      double startTime, int ncorr,
+	      double startTime, int npol,
 	      const casa::Table& antTab,
 	      bool writeAutoCorr,
 	      const std::string& flagColumn=std::string(), int nflagBits=0);

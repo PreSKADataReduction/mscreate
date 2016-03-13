@@ -6,7 +6,7 @@ INC=-I include/ -I /usr/local/include/casacore/
 CXXFLAGS=-O3
 LDFLAGS= -lcasa_casa -lcasa_ms -lcasa_measures -lcasa_tables
 
-obj/MSCreate.o:src/MSCreate.cc
+obj/MSCreate.o:src/MSCreate.cpp
 	mkdir -p obj && g++ -c $< $(CXXFLAGS) $(INC) -g -o $@
 
 lib/libmscreate.a:obj/MSCreate.o

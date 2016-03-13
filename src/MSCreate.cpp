@@ -95,7 +95,7 @@ double RawDataSource::time()const
 }
 
 MSCreate::MSCreate (const std::string& msName,
-		    double startTime, int ncorr,
+		    double startTime, int npol,
 		    const Table& antTab,
 		    bool writeAutoCorr,
 		    const std::string& flagColumn, int nflagBits)
@@ -103,7 +103,7 @@ MSCreate::MSCreate (const std::string& msName,
   itsNrBand        (0),
   itsNrField       (0),
   itsNrAnt         (0),
-  itsNrCorr        (ncorr),
+  itsNrCorr        (npol),
   //itsNrTimes       (0),
   //itsTimeStep      (timeStep),
   itsStartTime     (startTime),
@@ -588,7 +588,7 @@ void MSCreate::writeTimeStep(RawDataSource& rds)//t in UTC in sec
   double t=rds.time();
   assert(t>itsEndTime);
   
-  Double time=(t+itsEndTime)/2;
+  Double time=(t+itsEndTime)/2.0;
   Quantity qtime(time, "s");
   Double dt=t-itsEndTime;
   itsEndTime=t;
