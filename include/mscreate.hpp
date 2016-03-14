@@ -57,26 +57,26 @@ namespace casa
 namespace ulastai
 {
 
-  class RawDataSource
+  class raw_data_source
   {
   private:
-    const int nBaselines;
+    const int nbaselines;
   public:
-    RawDataSource(int nb);
+    raw_data_source(int nb);
   public:
-    int numOfBaselines()const;
-    bool fetchOne();
-    std::pair<int,int> antennaPair(int bl)const;
+    int num_of_baselines()const;
+    bool fetch_one();
+    std::pair<int,int> antenna_pair(int bl)const;
     casa::Array<casa::Complex> data(int field,int band,int bl)const;
     casa::Array<casa::Bool> flags(int field,int band,int bl)const;
     double time()const;
 
   private:
-    virtual bool doFetchOne()=0;
-    virtual std::pair<int,int> doAntennaPair(int bl)const=0;
-    virtual casa::Array<casa::Complex> doData(int field,int band,int bl)const=0;
-    virtual casa::Array<casa::Bool> doFlags(int field,int band,int bl)const=0;
-    virtual double doTime()const=0;
+    virtual bool do_fetch_one()=0;
+    virtual std::pair<int,int> do_antenna_pair(int bl)const=0;
+    virtual casa::Array<casa::Complex> do_data(int field,int band,int bl)const=0;
+    virtual casa::Array<casa::Bool> do_flags(int field,int band,int bl)const=0;
+    virtual double do_time()const=0;
   };
   
 
@@ -94,7 +94,7 @@ namespace ulastai
   
 
   
-  class MSCreate
+  class mscreate
   {
   public:
     // Construct the MS with a given name.
@@ -104,14 +104,14 @@ namespace ulastai
     // So antPos must have shape [3,nantennas].
     // If flagColumn is given and nFlagBits>0, an integer flag column is
     // created and column FLAG is mapped to it.
-    MSCreate (const std::string& msName,
-	      double startTime, int npol,
-	      const casa::Table& antTab,
-	      bool writeAutoCorr,
-	      const std::string& flagColumn=std::string(), int nflagBits=0);
+    mscreate (const std::string& ms_name,
+	      double start_time, int npol,
+	      const casa::Table& ant_tab,
+	      bool write_auto_corr,
+	      const std::string& flag_column=std::string(), int nflagbits=0);
 
     // Destructor
-    ~MSCreate();
+    ~mscreate();
 
     
   public:
@@ -128,9 +128,9 @@ namespace ulastai
     // maximum channel frequency. Thus it is not the sum of all widths.
     // <br>It returns the id (0-relative seqnr) of the band.
     // <group>
-    int addBand (int nchannels,
+    int add_band (int nchannels,
 		 double refFreq, double chanWidth);
-    int addBand (int nchannels,
+    int add_band (int nchannels,
 		 double refFreq, const double* chanFreqs,
 		 const double* chanWidths);
     // </group>
@@ -138,19 +138,19 @@ namespace ulastai
     // Add the definition of the next field (i.e. beam).
     // The angles have to be given in radians.
     // <br>It returns the id (0-relative seqnr) of the field.
-    int addField (double azimuth, double elevation);
+    int add_field (double azimuth, double elevation);
 
     // Write the rows for a single time step.
     // It sets the shape of the data array.
     // All flags are set to False.
-    void writeTimeStep(RawDataSource& rds);
+    void write_time_step(raw_data_source& rds);
 
     // Get the number of antennas.
-    int nrAntennas() const
-    { return itsNrAnt; }
+    int num_of_antennas() const
+    { return its_nantennas; }
 
     // Get the number of different polarization setups.
-    int nrPolarizations() const;
+    int num_of_polarizations() const;
 
     // Get the number of exposures.
     //int nrTimes() const
@@ -159,63 +159,61 @@ namespace ulastai
   private:
     // Forbid copy constructor and assignment by making them private.
     // <group>
-    MSCreate (const MSCreate&);
-    MSCreate& operator= (const MSCreate&);
+    mscreate (const mscreate&);
+    mscreate& operator= (const mscreate&);
     // </group>
 
     // Create the MS and fill its subtables as much as possible.
-    void createMS (const casa::String& msName, 
+    void create_ms (const casa::String& ms_name, 
 		   //const casa::Block<casa::MPosition>& antPos,
-		   const casa::Table& antTab,
-		   const casa::String& flagColumn, int nflagBits);
+		   const casa::Table& ant_tab,
+		   const casa::String& flag_column, int nflagbits);
 
     // Set the band.
-    int addBand (int nchannels,
+    int add_band (int nchannels,
 		 double refFreq, const casa::Vector<double>& chanFreqs,
 		 const casa::Vector<double>& chanWidths);
 
     // Add a polarization to the subtable.
     // Return the row number where it is added.
-    int addPolarization (int npolarizations);
+    int add_polarization (int npolarizations);
 
     // Fill the various subtables (at the end).
     // <group>
-    void fillAntenna (const casa::Table& tab);
-    void fillFeed();
-    void fillObservation();
-    void fillProcessor();
-    void fillState();
+    void fill_antenna (const casa::Table& tab);
+    void fill_feed();
+    void fill_observation();
+    void fill_processor();
+    void fill_state();
     // </group>
 
     // Fill the vector of baselines itsAntBL.
-    void fillBaseLines();
+    void fill_baselines();
 
     // Update the times in various subtables at the end of the observation.
-    void updateTimes();
+    void update_times();
 
     //# Define the data.
-    bool itsWriteAutoCorr;             //# write autocorrelations?
-    int itsNrBand;                     //# nr of bands
-    int itsNrField;                    //# nr of fields (beams)
-    int itsNrAnt;                      //# nr of antennas (stations)
+    bool its_write_auto_corr;             //# write autocorrelations?
+    int its_nbands;                     //# nr of bands
+    int its_nfields;                    //# nr of fields (beams)
+    int its_nantennas;                      //# nr of antennas (stations)
     //int itsNrFreq;                     //# Fixed nr of frequencies (channels)
-    int itsNrCorr;                     //# Fixed nr of correlations (polar.)
-    //int itsNrTimes;                    //# nr of exposures
-    //double itsTimeStep;                //# duration of each exposure (sec)
-    double itsStartTime;               //# start time of observation (sec)
-    double itsEndTime;
+    int its_npol_per_ant;                     //# Fixed nr of correlations (polar.)
+    double its_start_time;               //# start time of observation (sec)
+    double its_end_time;
   
   
   
-    casa::Block<casa::Int>* itsNrPol;  //# nr of polarizations for each band
-    casa::Block<casa::Int>* itsNrChan; //# nr of channels for each band
-    casa::Block<casa::Int>* itsPolnr;  //# rownr in POL subtable for each band
-    casa::Block<casa::MBaseline>* itsAntBL; //# Baseline vector for each antenna
-    casa::MPosition*      itsArrayPos; //# Position of array center
-    casa::MeasFrame*      itsFrame;    //# Frame to convert to apparent coordinates
-    casa::Block<casa::MDirection>* itsPhaseDir;   //# Phase directions of fields
-    casa::MeasurementSet* itsMS;
-    casa::MSMainColumns*  itsMSCol;
+    casa::Block<casa::Int>* its_npol;  //# nr of polarizations for each band
+    casa::Block<casa::Int>* its_nchan; //# nr of channels for each band
+    casa::Block<casa::Int>* its_poln;  //# rownr in POL subtable for each band
+    casa::Block<casa::MBaseline>* its_ant_bl; //# Baseline vector for each antenna
+    casa::MPosition*      its_array_pos; //# Position of array center
+    casa::MeasFrame*      its_frame;    //# Frame to convert to apparent coordinates
+    casa::Block<casa::MDirection>* its_phase_dir;   //# Phase directions of fields
+    casa::MeasurementSet* its_ms;
+    casa::MSMainColumns*  its_ms_col;
   };
 
   // @}
