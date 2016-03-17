@@ -1,6 +1,6 @@
 import pylab as pl
 
-def locxyz2itrf(self, lat, longitude, alt, locx=0.0, locy=0.0, locz=0.0):
+def locxyz2itrf(lat, longitude, alt, locx=0.0, locy=0.0, locz=0.0):
     """
     Returns the nominal ITRF (X, Y, Z) coordinates (m) for a point at "local"
     (x, y, z) (m) measured at geodetic latitude lat and longitude longitude
