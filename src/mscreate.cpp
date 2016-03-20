@@ -109,13 +109,13 @@ mscreate::mscreate (const std::string& ms_name,
   //itsTimeStep      (timeStep),
   its_start_time     (start_time),
   its_end_time       (start_time),
-  its_npol         (0),
-  its_nchan        (0),
-  its_poln         (0),
+  its_npol         (new Block<Int>),
+  its_nchan        (new Block<Int>),
+  its_poln         (new Block<Int>),
   its_ant_bl         (0),
   its_array_pos(new MPosition(array_pos)),
-  its_frame         (0),
-  its_phase_dir      (0),
+  its_frame         (new MeasFrame(*its_array_pos)),
+  its_phase_dir      (new Block<MDirection>()),
   its_ms            (0),
   its_ms_col         (0)
 {
@@ -125,10 +125,8 @@ mscreate::mscreate (const std::string& ms_name,
   //its_array_pos = new MPosition(antMPos[nantennas/2]);
   //its_frame = new MeasFrame(*its_array_pos);
   // Create the MS.
+  
   create_ms (ms_name, ant_tab, flag_column, n_flag_bits);
-  its_npol  = new Block<Int>;
-  its_nchan = new Block<Int>;
-  its_poln  = new Block<Int>;
   // Fill the baseline vector for each antenna.
   fill_baselines();
 }
@@ -350,9 +348,9 @@ int mscreate::add_field (double ra, double dec)
 {
   MVDirection radec (Quantity(ra,"rad"), Quantity(dec,"rad"));
   MDirection indir(radec, MDirection::J2000);
-  if (its_phase_dir == 0) {
-    its_phase_dir = new Block<MDirection>();
-  }
+  //if (its_phase_dir == 0) {
+  //  its_phase_dir = new Block<MDirection>();
+  //}
   its_phase_dir->resize (its_nfields+1);
   (*its_phase_dir)[its_nfields] = indir;
   Vector<MDirection> outdir(1);
@@ -411,7 +409,7 @@ void mscreate::fill_antenna (const Table& ant_tab)
 			   MPosition::ITRF);
     }
   //its_array_pos=new MPosition(ant_mpos[its_nantennas/2]);
-  its_frame = new MeasFrame(*its_array_pos);
+  //its_frame = new MeasFrame(*its_array_pos);
 
   ROScalarColumn<String> name_col(ant_tab,"NAME");
   Vector<String> its_ant_name(name_col.getColumn());
