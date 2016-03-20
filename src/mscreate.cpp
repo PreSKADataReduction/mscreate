@@ -97,6 +97,7 @@ double raw_data_source::time()const
 mscreate::mscreate (const std::string& ms_name,
 		    double start_time, int npol,
 		    const Table& ant_tab,
+		    const MPosition& array_pos,
 		    bool write_auto_corr,
 		    const std::string& flag_column, int n_flag_bits)
 : its_write_auto_corr (write_auto_corr),
@@ -112,6 +113,7 @@ mscreate::mscreate (const std::string& ms_name,
   its_nchan        (0),
   its_poln         (0),
   its_ant_bl         (0),
+  its_array_pos(new MPosition(array_pos)),
   its_frame         (0),
   its_phase_dir      (0),
   its_ms            (0),
@@ -408,7 +410,7 @@ void mscreate::fill_antenna (const Table& ant_tab)
       ant_mpos[i]=MPosition(MVPosition(ant_pos(0,i),ant_pos(1,i),ant_pos(2,i)),
 			   MPosition::ITRF);
     }
-  its_array_pos=new MPosition(ant_mpos[its_nantennas/2]);
+  //its_array_pos=new MPosition(ant_mpos[its_nantennas/2]);
   its_frame = new MeasFrame(*its_array_pos);
 
   ROScalarColumn<String> name_col(ant_tab,"NAME");

@@ -107,6 +107,7 @@ namespace ulastai
     mscreate (const std::string& ms_name,
 	      double start_time, int npol,
 	      const casa::Table& ant_tab,
+	      const casa::MPosition& array_pos,
 	      bool write_auto_corr,
 	      const std::string& flag_column=std::string(), int nflagbits=0);
 
