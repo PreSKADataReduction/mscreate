@@ -98,8 +98,7 @@ mscreate::mscreate (const std::string& ms_name,
 		    double start_time, int npol,
 		    const Table& ant_tab,
 		    const MPosition& array_pos,
-		    bool write_auto_corr,
-		    const std::string& flag_column, int n_flag_bits)
+		    bool write_auto_corr)
 : its_write_auto_corr (write_auto_corr),
   its_nbands        (0),
   its_nfields       (0),
@@ -126,7 +125,7 @@ mscreate::mscreate (const std::string& ms_name,
   //its_frame = new MeasFrame(*its_array_pos);
   // Create the MS.
   
-  create_ms (ms_name, ant_tab, flag_column, n_flag_bits);
+  create_ms (ms_name, ant_tab);
   // Fill the baseline vector for each antenna.
   fill_baselines();
 }
@@ -154,14 +153,10 @@ int mscreate::num_of_polarizations() const
 
 
 void mscreate::create_ms (const String& ms_name,
-			 //const Block<MPosition>& antPos,
-			 const Table& ant_tab,
-			 const String& flag_column, int n_flag_bits)
+			  //const Block<MPosition>& antPos,
+			  const Table& ant_tab)
 {
   // Create an integer flag column?
-  if (flag_column.empty()) {
-    n_flag_bits = 0;
-  }
   //IPosition dataShape(2,its_npol_per_ant,itsNrFreq);
   // Get the MS main default table description.
   TableDesc td = MS::requiredTableDesc();
@@ -180,13 +175,6 @@ void mscreate::create_ms (const String& ms_name,
   //  td.defineHypercolumn("TiledFlag", 3, tsmNames);////
   //}
   //else {
-  if (n_flag_bits == 8) {
-    td.addColumn(ArrayColumnDesc<uChar>(flag_column, 2));
-  } else if (n_flag_bits == 16) {
-    td.addColumn(ArrayColumnDesc<Short>(flag_column, 2));
-  } else {
-    td.addColumn(ArrayColumnDesc<Int>(flag_column, 2));
-  }
   //tsmNames[0] = flag_column;
   //td.rwColumnDesc(flag_column).setShape (dataShape);
   //td.defineHypercolumn("TiledIntFlag", 3, tsmNames);////

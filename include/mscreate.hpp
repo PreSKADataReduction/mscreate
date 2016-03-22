@@ -108,8 +108,7 @@ namespace ulastai
 	      double start_time, int npol,
 	      const casa::Table& ant_tab,
 	      const casa::MPosition& array_pos,
-	      bool write_auto_corr,
-	      const std::string& flag_column=std::string(), int nflagbits=0);
+	      bool write_auto_corr);
 
     // Destructor
     ~mscreate();
@@ -167,8 +166,7 @@ namespace ulastai
     // Create the MS and fill its subtables as much as possible.
     void create_ms (const casa::String& ms_name, 
 		   //const casa::Block<casa::MPosition>& antPos,
-		   const casa::Table& ant_tab,
-		   const casa::String& flag_column, int nflagbits);
+		   const casa::Table& ant_tab);
 
     // Set the band.
     int add_band (int nchannels,
