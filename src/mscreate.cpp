@@ -84,6 +84,11 @@ Array<Complex> raw_data_source::data(int field,int band,int bl)const
   return do_data(field,band,bl);
 }
 
+Array<Float> raw_data_source::sigma(int field,int band,int bl)const
+{
+  return do_sigma(field,band,bl);
+}
+
 Array<Bool> raw_data_source::flags(int field,int band,int bl)const
 {
   return do_flags(field,band,bl);
@@ -612,10 +617,10 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
 	  int row_number = its_ms->nrow();
 	  its_ms->addRow (nrbasel);
 	  //std::cerr<<row_number<<" "<<its_ms->nrow()<<std::endl;
-	  Array<Float> sigma(IPosition(1, shape(0)));
-	  sigma = 1;
-	  Array<Float> weight(IPosition(1, shape(0)));
-	  weight = 1;
+	  //Array<Float> sigma(IPosition(1, shape(0)));
+	  //sigma = 1;
+	  //Array<Float> weight(IPosition(1, shape(0)));
+	  //weight = 1;
 	  
 	  
 	  //defData = Complex(0,0);
@@ -630,6 +635,8 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
 	      int i=antenna_pair.second;
 	      Array<Complex> defData(rds.data(field,band,bl));
 	      Array<Bool> defFlags(rds.flags(field,band,bl));
+	      Array<Float> sigma(rds.sigma(field,band,bl));
+	      Array<Float> weight(pow(sigma,-2.0));
 	      myuvw = antuvw[i] - antuvw[j];
 	      its_ms_col->data().put(row_number, defData);
 	      its_ms_col->flag().put(row_number, defFlags);

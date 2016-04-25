@@ -68,6 +68,7 @@ namespace ulastai
     bool fetch_one();
     std::pair<int,int> antenna_pair(int bl)const;
     casa::Array<casa::Complex> data(int field,int band,int bl)const;
+    casa::Array<casa::Float> sigma(int field,int band,int bl)const;
     casa::Array<casa::Bool> flags(int field,int band,int bl)const;
     double time()const;
 
@@ -75,6 +76,7 @@ namespace ulastai
     virtual bool do_fetch_one()=0;
     virtual std::pair<int,int> do_antenna_pair(int bl)const=0;
     virtual casa::Array<casa::Complex> do_data(int field,int band,int bl)const=0;
+    virtual casa::Array<casa::Float> do_sigma(int field,int band,int bl)const=0;
     virtual casa::Array<casa::Bool> do_flags(int field,int band,int bl)const=0;
     virtual double do_time()const=0;
   };
