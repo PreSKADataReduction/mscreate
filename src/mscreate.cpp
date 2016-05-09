@@ -640,13 +640,13 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
 	      //https://casa.nrao.edu/Memos/CoordConvention.pdf
 	      //for uvw convension
 	      
-	      myuvw = antuvw[antenna_pair.first] - antuvw[antenna_pair.second];//
+	      myuvw = antuvw[antenna_pair.first] - antuvw[antenna_pair.second];
 	      its_ms_col->data().put(row_number, defData);
 	      its_ms_col->flag().put(row_number, defFlags);
 	      its_ms_col->flagRow().put (row_number, False);
 	      its_ms_col->time().put (row_number, time);
-	      its_ms_col->antenna1().put (row_number, j);
-	      its_ms_col->antenna2().put (row_number, i);
+	      its_ms_col->antenna1().put (row_number, antenna_pair.first);
+	      its_ms_col->antenna2().put (row_number, antenna_pair.second);
 	      its_ms_col->feed1().put (row_number, 0);
 	      its_ms_col->feed2().put (row_number, 0);
 	      its_ms_col->dataDescId().put (row_number, band);
