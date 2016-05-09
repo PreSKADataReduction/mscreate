@@ -194,6 +194,7 @@ namespace ulastai
     // Update the times in various subtables at the end of the observation.
     void update_times();
 
+    
     //# Define the data.
     bool its_write_auto_corr;             //# write autocorrelations?
     int its_nbands;                     //# nr of bands
@@ -215,6 +216,15 @@ namespace ulastai
     casa::Block<casa::MDirection>* its_phase_dir;   //# Phase directions of fields
     casa::MeasurementSet* its_ms;
     casa::MSMainColumns*  its_ms_col;
+
+  public:
+    //utility functions, static members
+    //calculate uvw according to the ITRF coordinate differences
+    //baseline in ITRF coordinate
+    //ra dec in radian
+    static casa::Vector<casa::Double> calc_uvw(casa::MBaseline bl,double utc_t,double ra,double dec);
+      
+    
   };
 
   // @}

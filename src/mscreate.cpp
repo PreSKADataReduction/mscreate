@@ -585,7 +585,7 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
   Quantity qtime(time, "s");
   Double dt=t-its_end_time;
   its_end_time=t;
-  cout<<MEpoch(qtime, MEpoch::UTC)<<endl;
+  cerr<<MEpoch(qtime, MEpoch::UTC)<<endl;
   its_frame->set (MEpoch(qtime, MEpoch::UTC));
   for (int field=0; field<its_nfields; ++field)
     {
@@ -631,13 +631,16 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
 	  for(int bl=0;bl<rds.num_of_baselines();++bl)
 	    {
 	      std::pair<int,int> antenna_pair(rds.antenna_pair(bl));
-	      int j=antenna_pair.first;
-	      int i=antenna_pair.second;
 	      Array<Complex> defData(rds.data(field,band,bl));
 	      Array<Bool> defFlags(rds.flags(field,band,bl));
 	      Array<Float> sigma(rds.sigma(field,band,bl));
 	      Array<Float> weight(pow(sigma,-2.0));
-	      myuvw = antuvw[i] - antuvw[j];
+	      //uvw calculation
+	      //see
+	      //https://casa.nrao.edu/Memos/CoordConvention.pdf
+	      //for uvw convension
+	      
+	      myuvw = antuvw[antenna_pair.first] - antuvw[antenna_pair.second];//
 	      its_ms_col->data().put(row_number, defData);
 	      its_ms_col->flag().put(row_number, defFlags);
 	      its_ms_col->flagRow().put (row_number, False);
@@ -678,3 +681,17 @@ void mscreate::fill_baselines()
   }
 }
 
+casa::Vector<casa::Double> mscreate::calc_uvw(casa::MBaseline bl,double utc_t,double ra,double dec)
+{
+  MPosition array_pos(casa::MVPosition(0,0,0),MPosition::ITRF);
+  MeasFrame frame(array_pos);
+  Quantity qtime(utc_t,"s");
+  frame.set(MEpoch(qtime,MEpoch::UTC));
+  MDirection indir(MVDirection(Quantity(ra,"rad"),Quantity(dec,"rad")),MDirection::J2000);
+  frame.set(indir);
+  bl.getRefPtr()->set(frame);
+  MBaseline::Convert mcvt(bl,MBaseline::J2000);
+  MVBaseline bas=mcvt().getValue();
+  MVuvw mvuvw(bas,indir.getValue());
+  return Muvw(mvuvw,Muvw::J2000).getValue().getVector();
+}
