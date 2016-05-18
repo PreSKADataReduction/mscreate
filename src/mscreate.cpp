@@ -681,6 +681,11 @@ void mscreate::fill_baselines()
   }
 }
 
+void mscreate::flush()
+{
+  its_ms->flush(true);
+}
+
 casa::Vector<casa::Double> mscreate::calc_uvw(casa::MBaseline bl,double utc_t,double ra,double dec)
 {
   MPosition array_pos(casa::MVPosition(0,0,0),MPosition::ITRF);

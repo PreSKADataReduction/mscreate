@@ -146,7 +146,7 @@ namespace ulastai
     // It sets the shape of the data array.
     // All flags are set to False.
     void write_time_step(raw_data_source& rds);
-
+    void flush();
     // Get the number of antennas.
     int num_of_antennas() const
     { return its_nantennas; }
