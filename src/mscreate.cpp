@@ -653,6 +653,8 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
 	      //for uvw convension
 	      
 	      myuvw = antuvw[antenna_pair.first] - antuvw[antenna_pair.second];
+
+#if 0
 	      if(correct_w)
 		{
 		  double w=myuvw[2];
@@ -660,15 +662,17 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
 		  double u=myuvw[0];
 		  for(int i=0;i<ch_freq_vectors.at(band).size();++i)
 		    {
-		      constexpr double c=2.99792458E8;
+		      constexpr double c=299792458.0;
+		      constexpr double pi=std::atan(1)*4;
 		      double freq=ch_freq_vectors.at(band).at(i);
 		      double l=c/freq;
 		      //std::cerr<<w/l<<endl;
 		      IPosition p(2,0,i);
-		      defData(p)*=std::exp(-std::complex<double>(0,1)*w/l*2.0*3.14159265358979323846);
-		      //defData(p)=std::exp(-std::complex<double>(0,w/l*2.0*3.14159265358979323846));
+		      defData(p)*=std::exp(-std::complex<double>(0,1)*w/l*2.0*pi);
+		      //defData(p)=std::exp(-std::complex<double>(0,w/l*2.0*pi));
 		    }
 		}
+#endif
 	      
 	      
 	      its_ms_col->data().put(row_number, defData);
