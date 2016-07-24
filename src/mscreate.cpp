@@ -121,7 +121,8 @@ mscreate::mscreate (const std::string& ms_name,
   its_frame         (new MeasFrame(*its_array_pos)),
   its_phase_dir      (new Block<MDirection>()),
   its_ms            (0),
-  its_ms_col         (0)
+  its_ms_col         (0),
+  correct_w(false)
 {
   
   // Use the middle antenna as the array position.
@@ -217,6 +218,11 @@ void mscreate::create_ms (const String& ms_name,
   // Create symlinks for them, but only if no tiling in frequency.
 }
 
+void mscreate::set_correct_w(bool b)
+{
+  correct_w=b;
+}
+
 int mscreate::add_band (int nchannels,
 		       double ref_freq, double chan_width)
 {
@@ -243,6 +249,12 @@ int mscreate::add_band (int nchannels,
 		       double ref_freq, const Vector<double>& chan_freqs,
 		       const Vector<double>& chan_widths)
 {
+  std::vector<double> f(nchannels);
+  for(int i=0;i<nchannels;++i)
+    {
+      f[i]=chan_freqs[i];
+    }
+  ch_freq_vectors.push_back(f);
   int npolarizations=its_npol_per_ant;
   AlwaysAssert (npolarizations==1 || npolarizations==2 || npolarizations==4,
 		AipsError);
@@ -641,6 +653,24 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
 	      //for uvw convension
 	      
 	      myuvw = antuvw[antenna_pair.first] - antuvw[antenna_pair.second];
+	      if(correct_w)
+		{
+		  double w=myuvw[2];
+		  double v=myuvw[1];
+		  double u=myuvw[0];
+		  for(int i=0;i<ch_freq_vectors.at(band).size();++i)
+		    {
+		      constexpr double c=2.99792458E8;
+		      double freq=ch_freq_vectors.at(band).at(i);
+		      double l=c/freq;
+		      //std::cerr<<w/l<<endl;
+		      IPosition p(2,0,i);
+		      defData(p)*=std::exp(-std::complex<double>(0,1)*w/l*2.0*3.14159265358979323846);
+		      //defData(p)=std::exp(-std::complex<double>(0,w/l*2.0*3.14159265358979323846));
+		    }
+		}
+	      
+	      
 	      its_ms_col->data().put(row_number, defData);
 	      its_ms_col->flag().put(row_number, defFlags);
 	      its_ms_col->flagRow().put (row_number, False);

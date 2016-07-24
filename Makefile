@@ -13,4 +13,4 @@ lib/libmscreate.a:obj/mscreate.o
 	mkdir -p lib && ar rv $@ $^
 
 clean:
-	rm -f `find -iname *.o` `find -iname *~`
+	rm -f `find -iname *.o` `find -iname *~` lib/lib*

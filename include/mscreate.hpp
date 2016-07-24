@@ -157,7 +157,7 @@ namespace ulastai
     // Get the number of exposures.
     //int nrTimes() const
     //  { return itsNrTimes; }
-
+    void set_correct_w(bool b);
   private:
     // Forbid copy constructor and assignment by making them private.
     // <group>
@@ -169,7 +169,7 @@ namespace ulastai
     void create_ms (const casa::String& ms_name, 
 		   //const casa::Block<casa::MPosition>& antPos,
 		   const casa::Table& ant_tab);
-
+    
     // Set the band.
     int add_band (int nchannels,
 		 double refFreq, const casa::Vector<double>& chanFreqs,
@@ -216,7 +216,8 @@ namespace ulastai
     casa::Block<casa::MDirection>* its_phase_dir;   //# Phase directions of fields
     casa::MeasurementSet* its_ms;
     casa::MSMainColumns*  its_ms_col;
-
+    bool correct_w;
+    std::vector<std::vector<double> > ch_freq_vectors;
   public:
     //utility functions, static members
     //calculate uvw according to the ITRF coordinate differences
