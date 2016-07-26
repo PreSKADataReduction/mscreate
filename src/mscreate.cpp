@@ -102,27 +102,25 @@ double raw_data_source::time()const
 mscreate::mscreate (const std::string& ms_name,
 		    double start_time, int npol,
 		    const Table& ant_tab,
-		    const MPosition& array_pos,
-		    bool write_auto_corr)
-: its_write_auto_corr (write_auto_corr),
-  its_nbands        (0),
-  its_nfields       (0),
-  its_nantennas         (0),
-  its_npol_per_ant        (npol),
-  //itsNrTimes       (0),
-  //itsTimeStep      (timeStep),
-  its_start_time     (start_time),
-  its_end_time       (start_time),
-  its_npol         (new Block<Int>),
-  its_nchan        (new Block<Int>),
-  its_poln         (new Block<Int>),
-  its_ant_bl         (0),
-  its_array_pos(new MPosition(array_pos)),
-  its_frame         (new MeasFrame(*its_array_pos)),
-  its_phase_dir      (new Block<MDirection>()),
-  its_ms            (0),
-  its_ms_col         (0),
-  correct_w(false)
+		    const MPosition& array_pos)
+  : its_nbands        (0),
+    its_nfields       (0),
+    its_nantennas         (0),
+    its_npol_per_ant        (npol),
+    //itsNrTimes       (0),
+    //itsTimeStep      (timeStep),
+    its_start_time     (start_time),
+    its_end_time       (start_time),
+    its_npol         (new Block<Int>),
+    its_nchan        (new Block<Int>),
+    its_poln         (new Block<Int>),
+    its_ant_bl         (0),
+    its_array_pos(new MPosition(array_pos)),
+    its_frame         (new MeasFrame(*its_array_pos)),
+    its_phase_dir      (new Block<MDirection>()),
+    its_ms            (0),
+    its_ms_col         (0),
+    correct_w(false)
 {
   
   // Use the middle antenna as the array position.
@@ -620,10 +618,11 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
 	  //Array<Bool> defFlags(shape);
 	  //defFlags = False;
 	  //defData = Complex();
-	  int nrbasel = its_nantennas*(its_nantennas-1)/2;
-	  if (its_write_auto_corr) {
-	    nrbasel += its_nantennas;
-	  }
+	  //int nrbasel = its_nantennas*(its_nantennas-1)/2;
+	  //if (its_write_auto_corr) {
+	  //  nrbasel += its_nantennas;
+	  //}
+	  int nrbasel=rds.num_of_baselines();
 	  
 	  // Add the number of rows needed.
 	  int row_number = its_ms->nrow();
@@ -696,7 +695,7 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
 	      its_ms_col->uvw().put (row_number, myuvw);
 	      its_ms_col->weight().put (row_number, weight);
 	      its_ms_col->sigma().put (row_number, sigma);
-	      row_number++; 
+	      row_number++;
 	    }
 	}
     }

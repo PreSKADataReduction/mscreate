@@ -109,8 +109,7 @@ namespace ulastai
     mscreate (const std::string& ms_name,
 	      double start_time, int npol,
 	      const casa::Table& ant_tab,
-	      const casa::MPosition& array_pos,
-	      bool write_auto_corr);
+	      const casa::MPosition& array_pos);
 
     // Destructor
     ~mscreate();
@@ -196,7 +195,6 @@ namespace ulastai
 
     
     //# Define the data.
-    bool its_write_auto_corr;             //# write autocorrelations?
     int its_nbands;                     //# nr of bands
     int its_nfields;                    //# nr of fields (beams)
     int its_nantennas;                      //# nr of antennas (stations)
