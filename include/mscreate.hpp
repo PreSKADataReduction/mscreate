@@ -29,17 +29,47 @@
 
 //# Includes
 //#include <Common/LofarTypes.h>
-#include <casa/aips.h>
+#include <cassert>
+#include <mscreate.hpp>
+#include <ms/MeasurementSets.h>
+#include <tables/DataMan/IncrementalStMan.h>
+#include <tables/DataMan/StandardStMan.h>
+#include <tables/DataMan/TiledColumnStMan.h>
+#include <tables/DataMan/TiledStManAccessor.h>
+#include <tables/Tables/SetupNewTab.h>
+#include <tables/Tables/TableDesc.h>
+#include <tables/Tables/ArrColDesc.h>
+#include <tables/Tables/TableRecord.h>
 #include <casa/Arrays/Vector.h>
 #include <casa/Arrays/Cube.h>
 #include <casa/Arrays/Matrix.h>
 #include <casa/Arrays/ArrayMath.h>
+#include <casa/Containers/Block.h>
+#include <casa/Containers/Record.h>
 #include <measures/Measures/MPosition.h>
+#include <measures/Measures/MBaseline.h>
+#include <measures/Measures/Muvw.h>
+#include <measures/Measures/MeasTable.h>
+#include <measures/Measures/Stokes.h>
+#include <measures/Measures/MCBaseline.h>
+#include <measures/Measures/MeasConvert.h>
+#include <casa/Quanta/MVEpoch.h>
+#include <casa/Quanta/MVDirection.h>
+#include <casa/Quanta/MVPosition.h>
+#include <casa/Quanta/MVBaseline.h>
+#include <casa/OS/Time.h>
+#include <casa/OS/SymLink.h>
+#include <casa/BasicSL/Constants.h>
+#include <casa/Utilities/Assert.h>
+#include <casa/Exceptions/Error.h>
+#include <casa/Arrays/Slicer.h>
+#include <casa/Arrays/Slice.h>
 //#include <Common/lofar_vector.h>
 
 #include <string>
 
 //# Forward Declarations
+/*
 namespace casacore
 {
   class String;
@@ -50,10 +80,10 @@ namespace casacore
   class MeasurementSet;
   class MSMainColumns;
   template<class T> class Block;
-  template<class T> class Vector;
+  template<class T, class U> class Vector;
   template<class T> class Matrix;
   template<class T> class Cube;
-}
+}*/
 
 namespace ulastai
 {
