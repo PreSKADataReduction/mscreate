@@ -34,12 +34,13 @@
 #include <casa/Arrays/Cube.h>
 #include <casa/Arrays/Matrix.h>
 #include <casa/Arrays/ArrayMath.h>
+#include <measures/Measures/MPosition.h>
 //#include <Common/lofar_vector.h>
 
 #include <string>
 
 //# Forward Declarations
-namespace casa
+namespace casacore
 {
   class String;
   class MPosition;
@@ -67,17 +68,17 @@ namespace ulastai
     int num_of_baselines()const;
     bool fetch_one();
     std::pair<int,int> antenna_pair(int bl)const;
-    casa::Array<casa::Complex> data(int field,int band,int bl)const;
-    casa::Array<casa::Float> sigma(int field,int band,int bl)const;
-    casa::Array<casa::Bool> flags(int field,int band,int bl)const;
+    casacore::Array<casacore::Complex> data(int field,int band,int bl)const;
+    casacore::Array<casacore::Float> sigma(int field,int band,int bl)const;
+    casacore::Array<casacore::Bool> flags(int field,int band,int bl)const;
     double time()const;
 
   private:
     virtual bool do_fetch_one()=0;
     virtual std::pair<int,int> do_antenna_pair(int bl)const=0;
-    virtual casa::Array<casa::Complex> do_data(int field,int band,int bl)const=0;
-    virtual casa::Array<casa::Float> do_sigma(int field,int band,int bl)const=0;
-    virtual casa::Array<casa::Bool> do_flags(int field,int band,int bl)const=0;
+    virtual casacore::Array<casacore::Complex> do_data(int field,int band,int bl)const=0;
+    virtual casacore::Array<casacore::Float> do_sigma(int field,int band,int bl)const=0;
+    virtual casacore::Array<casacore::Bool> do_flags(int field,int band,int bl)const=0;
     virtual double do_time()const=0;
   };
   
@@ -108,8 +109,8 @@ namespace ulastai
     // created and column FLAG is mapped to it.
     mscreate (const std::string& ms_name,
 	      double start_time, int npol,
-	      const casa::Table& ant_tab,
-	      const casa::MPosition& array_pos);
+	      const casacore::Table& ant_tab,
+	      const casacore::MPosition& array_pos);
 
     // Destructor
     ~mscreate();
@@ -165,14 +166,14 @@ namespace ulastai
     // </group>
 
     // Create the MS and fill its subtables as much as possible.
-    void create_ms (const casa::String& ms_name, 
-		   //const casa::Block<casa::MPosition>& antPos,
-		   const casa::Table& ant_tab);
+    void create_ms (const casacore::String& ms_name, 
+		   //const casacore::Block<casacore::MPosition>& antPos,
+		   const casacore::Table& ant_tab);
     
     // Set the band.
     int add_band (int nchannels,
-		 double refFreq, const casa::Vector<double>& chanFreqs,
-		 const casa::Vector<double>& chanWidths);
+		 double refFreq, const casacore::Vector<double>& chanFreqs,
+		 const casacore::Vector<double>& chanWidths);
 
     // Add a polarization to the subtable.
     // Return the row number where it is added.
@@ -180,7 +181,7 @@ namespace ulastai
 
     // Fill the various subtables (at the end).
     // <group>
-    void fill_antenna (const casa::Table& tab);
+    void fill_antenna (const casacore::Table& tab);
     void fill_feed();
     void fill_observation();
     void fill_processor();
@@ -205,15 +206,15 @@ namespace ulastai
   
   
   
-    casa::Block<casa::Int>* its_npol;  //# nr of polarizations for each band
-    casa::Block<casa::Int>* its_nchan; //# nr of channels for each band
-    casa::Block<casa::Int>* its_poln;  //# rownr in POL subtable for each band
-    casa::Block<casa::MBaseline>* its_ant_bl; //# Baseline vector for each antenna
-    casa::MPosition*      its_array_pos; //# Position of array center
-    casa::MeasFrame*      its_frame;    //# Frame to convert to apparent coordinates
-    casa::Block<casa::MDirection>* its_phase_dir;   //# Phase directions of fields
-    casa::MeasurementSet* its_ms;
-    casa::MSMainColumns*  its_ms_col;
+    casacore::Block<casacore::Int>* its_npol;  //# nr of polarizations for each band
+    casacore::Block<casacore::Int>* its_nchan; //# nr of channels for each band
+    casacore::Block<casacore::Int>* its_poln;  //# rownr in POL subtable for each band
+    casacore::Block<casacore::MBaseline>* its_ant_bl; //# Baseline vector for each antenna
+    casacore::MPosition*      its_array_pos; //# Position of array center
+    casacore::MeasFrame*      its_frame;    //# Frame to convert to apparent coordinates
+    casacore::Block<casacore::MDirection>* its_phase_dir;   //# Phase directions of fields
+    casacore::MeasurementSet* its_ms;
+    casacore::MSMainColumns*  its_ms_col;
     bool correct_w;
     std::vector<std::vector<double> > ch_freq_vectors;
   public:
@@ -221,7 +222,7 @@ namespace ulastai
     //calculate uvw according to the ITRF coordinate differences
     //baseline in ITRF coordinate
     //ra dec in radian
-    static casa::Vector<casa::Double> calc_uvw(casa::MBaseline bl,double utc_t,double ra,double dec);
+    static casacore::Vector<casacore::Double> calc_uvw(casacore::MBaseline bl,double utc_t,double ra,double dec);
       
     
   };

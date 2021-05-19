@@ -2,7 +2,7 @@ target=lib/libmscreate.a
 
 all:$(target)
 
-INC=-I include/ -I /usr/local/include/casacore/
+INC=-I include/ -I /usr/include/casacore/
 CXXFLAGS=-O3 -std=c++11
 LDFLAGS= -lcasa_casa -lcasa_ms -lcasa_measures -lcasa_tables
 

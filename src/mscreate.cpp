@@ -58,7 +58,8 @@
 #include <casa/Arrays/Slice.h>
 
 using namespace ulastai;
-using namespace casa;
+using namespace casacore;
+
 
 raw_data_source::raw_data_source(int n)
   :nbaselines(n)
@@ -102,7 +103,7 @@ double raw_data_source::time()const
 mscreate::mscreate (const std::string& ms_name,
 		    double start_time, int npol,
 		    const Table& ant_tab,
-		    const MPosition& array_pos)
+		    const casacore::MPosition& array_pos)
   : its_nbands        (0),
     its_nfields       (0),
     its_nantennas         (0),
@@ -115,7 +116,7 @@ mscreate::mscreate (const std::string& ms_name,
     its_nchan        (new Block<Int>),
     its_poln         (new Block<Int>),
     its_ant_bl         (0),
-    its_array_pos(new MPosition(array_pos)),
+    its_array_pos(new casacore::MPosition(array_pos)),
     its_frame         (new MeasFrame(*its_array_pos)),
     its_phase_dir      (new Block<MDirection>()),
     its_ms            (0),
@@ -719,9 +720,9 @@ void mscreate::flush()
   its_ms->flush(true);
 }
 
-casa::Vector<casa::Double> mscreate::calc_uvw(casa::MBaseline bl,double utc_t,double ra,double dec)
+casacore::Vector<casacore::Double> mscreate::calc_uvw(casacore::MBaseline bl,double utc_t,double ra,double dec)
 {
-  MPosition array_pos(casa::MVPosition(0,0,0),MPosition::ITRF);
+  MPosition array_pos(casacore::MVPosition(0,0,0),MPosition::ITRF);
   MeasFrame frame(array_pos);
   Quantity qtime(utc_t,"s");
   frame.set(MEpoch(qtime,MEpoch::UTC));
