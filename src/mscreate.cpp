@@ -316,7 +316,7 @@ int mscreate::add_polarization (int npolarizations)
 int mscreate::add_field (double ra, double dec)
 {
   MVDirection radec (Quantity(ra,"rad"), Quantity(dec,"rad"));
-  MDirection indir(radec, MDirection::JTRUE);
+  MDirection indir(radec, MDirection::JMEAN);
   //if (its_phase_dir == 0) {
   //  its_phase_dir = new Block<MDirection>();
   //}
@@ -570,10 +570,10 @@ void mscreate::write_time_step(raw_data_source& rds)//t in UTC in sec
       for (int j=0; j<its_nantennas; ++j) {
 	MBaseline& mbl = (*its_ant_bl)[j];
 	mbl.getRefPtr()->set(*its_frame);      // attach frame
-	MBaseline::Convert mcvt(mbl, MBaseline::JTRUE);
+	MBaseline::Convert mcvt(mbl, MBaseline::JMEAN);
 	MVBaseline bas = mcvt().getValue();
 	MVuvw jvguvw(bas, (*its_phase_dir)[field].getValue());
-	antuvw[j] = Muvw(jvguvw, Muvw::JTRUE).getValue().getVector();
+	antuvw[j] = Muvw(jvguvw, Muvw::JMEAN).getValue().getVector();
       }
       
       Vector<double> myuvw(3);
@@ -691,11 +691,11 @@ casacore::Vector<casacore::Double> mscreate::calc_uvw(casacore::MBaseline bl,dou
   MeasFrame frame(array_pos);
   Quantity qtime(utc_t,"s");
   frame.set(MEpoch(qtime,MEpoch::UTC));
-  MDirection indir(MVDirection(Quantity(ra,"rad"),Quantity(dec,"rad")),MDirection::JTRUE);
+  MDirection indir(MVDirection(Quantity(ra,"rad"),Quantity(dec,"rad")),MDirection::JMEAN);
   frame.set(indir);
   bl.getRefPtr()->set(frame);
-  MBaseline::Convert mcvt(bl,MBaseline::JTRUE);
+  MBaseline::Convert mcvt(bl,MBaseline::JMEAN);
   MVBaseline bas=mcvt().getValue();
   MVuvw mvuvw(bas,indir.getValue());
-  return Muvw(mvuvw,Muvw::JTRUE).getValue().getVector();
+  return Muvw(mvuvw,Muvw::JMEAN).getValue().getVector();
 }
